@@ -15,6 +15,15 @@ def matrix_addition(a, b):
     return result_matrix
 
 
+def matrix_multiplication(a, c):
+    n = len(a)
+    m = len(a[0])
+    for row in range(n):
+        for column in range(m):
+            a[row][column] *= c
+
+
+
 def print_matrix(mat, n, m):
     for row in range(n):
         for column in range(m):
@@ -23,15 +32,21 @@ def print_matrix(mat, n, m):
 
 
 def main():
-    matrices = []
-    for _i in range(2):
-        n, m = list(map(int, input().split()))
-        matrices.append(read_matrix(n, m))
-    if len(matrices[0]) != len(matrices[1]) or len(matrices[0][0]) != len(matrices[1][0]):
-        print('ERROR')
-        exit()
-    result = matrix_addition(matrices[0], matrices[1])
-    print_matrix(result, len(result), len(result[0]))
+    # matrices = []
+    # for _i in range(2):
+    #     n, m = list(map(int, input().split()))
+    #     matrices.append(read_matrix(n, m))
+    # if len(matrices[0]) != len(matrices[1]) or len(matrices[0][0]) != len(matrices[1][0]):
+    #     print('ERROR')
+    #     exit()
+    # result = matrix_addition(matrices[0], matrices[1])
+    # print_matrix(result, len(result), len(result[0]))
+
+    n, m = list(map(int, input().split()))
+    matrix = read_matrix(n, m)
+    c = int(input())
+    matrix_multiplication(matrix, c)
+    print_matrix(matrix, n, m)
 
 
 if __name__ == '__main__':
