@@ -37,6 +37,31 @@ def matrix_multiplication(a, b):
     return result
 
 
+def determinant(matrix):
+    def cofactor(matrix, row, column, n):
+        cofac = [[0 for _i in range(n - 1)] for _i in range(n - 1)]
+        i = j = 0
+        for r in range(n):
+            for c in range(n):
+                if r != row and c != column:
+                    cofac[i][j] = matrix[r][c]
+                    j += 1
+                    if j == n - 1:
+                        j = 0
+                        i += 1
+        return cofac
+
+
+    n = len(matrix)
+    det = 0
+    sign = 1
+    if n == 1:
+        return matrix[0][0]
+    for col in range(n):
+        det += sign * matrix[0][col] * determinant(cofactor(matrix, 0, col, n))
+        sign = -sign
+    return det
+
 
 def print_matrix(mat, n, m):
     for row in range(n):
@@ -96,7 +121,7 @@ class TransposeMatrix:
 
 def main():
     while True:
-        print('1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n0. Exit')
+        print('1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n0. Exit')
         choice = int(input())
         if choice == 1:
             matrices = []
@@ -126,6 +151,12 @@ def main():
             transposed = TransposeMatrix()
             if transposed:
                 transposed.print_transposed_matrix()
+        elif choice == 5:
+            n, m = list(map(int, input().split()))
+            if n != m:
+                print('Could not calculate the determinant.')
+                continue
+            print(determinant(read_matrix(n, m)))
         elif choice == 0:
             break
 
