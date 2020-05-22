@@ -1,3 +1,5 @@
+import math
+
 def read_matrix(n, m):
     matrix = [[] for _i in range(n)]
     for row in range(n):
@@ -37,21 +39,21 @@ def matrix_multiplication(a, b):
     return result
 
 
+def cofactor(matrix, row, column, n):
+    cofac = [[0 for _i in range(n - 1)] for _i in range(n - 1)]
+    i = j = 0
+    for r in range(n):
+        for c in range(n):
+            if r != row and c != column:
+                cofac[i][j] = matrix[r][c]
+                j += 1
+                if j == n - 1:
+                    j = 0
+                    i += 1
+    return cofac
+
+
 def determinant(matrix):
-    def cofactor(matrix, row, column, n):
-        cofac = [[0 for _i in range(n - 1)] for _i in range(n - 1)]
-        i = j = 0
-        for r in range(n):
-            for c in range(n):
-                if r != row and c != column:
-                    cofac[i][j] = matrix[r][c]
-                    j += 1
-                    if j == n - 1:
-                        j = 0
-                        i += 1
-        return cofac
-
-
     n = len(matrix)
     det = 0
     sign = 1
@@ -119,9 +121,35 @@ class TransposeMatrix:
         print_matrix(self.new_matrix, self.n, self.m)
 
 
+def transpose_main_diagonal(matrix):
+    n = len(matrix)
+    m = len(matrix[0])
+    new_matrix = [[0 for _i in range(m)] for _i in range(n)]
+    for row in range(n):
+        for column in range(m):
+            new_matrix[row][column] = matrix[column][row]
+    return new_matrix
+
+
+def inverse(matrix):
+    n = len(matrix)
+    m = len(matrix[0])
+    if n != m:
+        return
+    determinant_of_matrix = determinant(matrix)
+    if determinant_of_matrix == 0:
+        return
+    cofactor_matrix = [[0 for _i in range(n)] for _i in range(n)]
+    for row in range(n):
+        for column in range(n):
+            cofactor_matrix[row][column] = math.pow(-1, row + column) * determinant(cofactor(matrix, row, column, n))
+    matrix_multiplication_by_constant_c(cofactor_matrix, float(1) / determinant_of_matrix)
+    return transpose_main_diagonal(cofactor_matrix)
+
+
 def main():
     while True:
-        print('1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n0. Exit')
+        print('1. Add matrices\n2. Multiply matrix by a constant\n3. Multiply matrices\n4. Transpose matrix\n5. Calculate a determinant\n6.Inverse matrix\n0. Exit')
         choice = int(input())
         if choice == 1:
             matrices = []
@@ -157,6 +185,12 @@ def main():
                 print('Could not calculate the determinant.')
                 continue
             print(determinant(read_matrix(n, m)))
+        elif choice == 6:
+            n, m = list(map(int, input().split()))
+            if n != m:
+                print('The matrix is not invertible.')
+                continue
+            print_matrix(inverse(read_matrix(n, m)), n, m)
         elif choice == 0:
             break
 
